@@ -10,7 +10,7 @@ const userError = (status, message, res) => {
 
 // POST METHOD
 
-router.post('/', (req, res) => {
+router.post('/api/actions', (req, res) => {
     const { completed, description, notes, project_id } = req.body;
     const actionPost = { completed, description, notes, project_id };
 
@@ -34,7 +34,18 @@ router.post('/', (req, res) => {
 
 // GET METHOD
 
-router.get('/:id', (req, res) => {
+router.get('/api/actions', (req, res) => {
+    actionDb
+        .get()
+        .then(action => {
+            res.json(action)
+        })
+        .catch(error => {
+            userError(404, 'Somethings wrong', res);
+        });
+});
+
+router.get('/api/actions/:id', (req, res) => {
     actionDb
         .get(id)
         .then(action => {
@@ -48,10 +59,10 @@ router.get('/:id', (req, res) => {
 
 // DELETE METHOD
 
-router.delete('/:id', (req, res) => {
+router.delete('/api/actions/:id', (req, res) => {
     const { id } = req.params;
 
-    tagDb
+    actionDb
         .get(id)
         .then(action => {
             actionDb
@@ -71,7 +82,7 @@ router.delete('/:id', (req, res) => {
 
 // PUT METHOD
 
-router.put('/:id', (req, res) => {
+router.put('/api/actions/:id', (req, res) => {
     const { id } = req.params;
     const { project_id, notes, description, completed } = req.body;
     const actionPut = { project_id, notes, description, completed };
